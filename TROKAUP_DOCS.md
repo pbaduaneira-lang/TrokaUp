@@ -1,79 +1,73 @@
-# 🚀 TrokaUp - Documentação do Projeto
+# 🚀 TrokaUp - Documentação Técnica Oficial & Registro de Produção
 
-Este documento serve como a **"memória central"** e guia técnico do **TrokaUp**, estruturado para desenvolvimento contínuo e publicação na **Google Play Store**.
-
----
-
-## 📝 Visão Geral
-O **TrokaUp** é uma plataforma mobile de **escambo moderno** (troca colaborativa de produtos) entre usuários de uma mesma região geográfica. A missão do aplicativo é facilitar negociações diretas de itens de interesse mútuo, com segurança, chat em tempo real e sistema de reputação comunitária.
+Documento central de engenharia, arquitetura, infraestrutura em nuvem e publicação do projeto **TrokaUp**.
 
 ---
 
-## 🛠️ Stack Tecnológica
+## 📌 1. Identidade & Registro Oficial
 
-### Frontend (Mobile)
-- **Framework**: React Native + Expo (SDK 54+).
-- **Identificador Android (Google Play)**: `com.trokaup.app` (versionCode: 1).
-- **Roteamento**: Expo Router v6 (File-based navigation: `Explorar`, `Anunciar`, `Conversas`, `Perfil`, `Product Details` e `Chat`).
-- **Estilização**: StyleSheet nativo com Tokens centralizados (`constants/theme.ts`).
-- **Paleta de Cores**: Indigo (`#4F46E5`), Slate (`#0F172A`) e Ciano (`#06B6D4`).
-- **Conectividade em Tempo Real**: WebSocket bidirecional com auto-reconexão e polling inteligente.
-- **Configuração Centralizada**: `constants/config.ts` (chaveamento dinâmico entre IP local de desenvolvimento e URL de produção HTTPS/WSS).
-
-### Backend (API & Realtime)
-- **Linguagem**: Python 3.x.
-- **Framework**: FastAPI assíncrono com Uvicorn.
-- **Banco de Dados**: PostgreSQL com *Connection Pooling* (`psycopg2.pool.ThreadedConnectionPool`).
-- **Upload Seguro**: Nomes de arquivo únicos gerados com `UUID v4` e persistência em `/static/images/`.
-- **Moderação e Conformidade**: Endpoints dedicados para denúncia de conteúdo (`/api/reports`) e exclusão de conta/dados (`DELETE /api/users/{user_id}`).
+| Item | Valor Oficial |
+| :--- | :--- |
+| **Nome da Plataforma** | **TrokaUp** |
+| **Slogan Oficial** | *Transforme o que você tem no que você quer. Escambo moderno & sustentável.* |
+| **Identificador do Pacote Android** | `com.trokaup.app` |
+| **Versão Inicial de Lançamento** | `1.0.0` (Code `2`) |
+| **EAS Project ID (Expo)** | `c034a9d3-bdc5-4116-8a7e-1d07aed5bce0` |
+| **Conta Expo EAS** | `edmiltondefacio` (`pbaduaneira@gmail.com`) |
+| **Repositório Oficial no GitHub** | [https://github.com/pbaduaneira-lang/TrokaUp](https://github.com/pbaduaneira-lang/TrokaUp) |
+| **Ambiente Web / Vercel** | [https://trokaup.vercel.app](https://trokaup.vercel.app) *(DNS configurado)* |
 
 ---
 
-## 🗄️ Estrutura do Banco de Dados (PostgreSQL)
+## 🗄️ 2. Infraestrutura de Banco de Dados (Supabase PostgreSQL)
 
-1. **`products`**:
-   - `id`, `titulo`, `descricao`, `quer_em_troca`, `imagem_url`, `cidade`, `usuario_id`, `categoria`, `ativo`, `criado_em`.
-2. **`mensagens`**:
-   - `id`, `remetente_id`, `destinatario_id`, `texto`, `lida`, `produto_id`, `criado_em`.
-3. **`users`**:
-   - `id`, `nome`, `email`, `senha`, `cidade`, `role`, `criado_em`.
-4. **`ratings`**:
-   - `id`, `avaliador_id`, `avaliado_id`, `estrelas` (1 a 5), `comentario`, `criado_em`.
-5. **`reports` (Moderação Google Play UGC)**:
-   - `id`, `produto_id`, `denunciante_id`, `denunciado_id`, `motivo`, `detalhes`, `status`, `criado_em`.
+O banco de dados foi migrado de ambiente local para a nuvem da AWS (São Paulo) no Supabase, com suporte a pooling de conexões (*Connection Pooling* na porta 6543) e SSL.
 
----
+- **Projeto Supabase:** `xfwvkjxpomynvoyylxhx` (São Paulo - `sa-east-1`)
+- **String de Conexão Oficial:**
+  `postgresql://postgres.xfwvkjxpomynvoyylxhx:trokaupedju1016@aws-0-sa-east-1.pooler.supabase.com:6543/postgres`
 
-## 📋 Checklist de Publicação na Google Play Store
-
-- [x] Nome oficial configurado: **TrokaUp**
-- [x] Package Name Android definido: `com.trokaup.app`
-- [x] Permissões declaradas: `CAMERA`, `READ_MEDIA_IMAGES`, `READ_EXTERNAL_STORAGE`, `VIBRATE`
-- [x] Moderação de Conteúdo (UGC): Botão de denúncia no anúncio e no chat
-- [x] Bloqueio de Usuários: Ação de bloqueio no chat
-- [x] Exclusão de Conta: Botão "Excluir Minha Conta e Dados" na tela de perfil
-- [x] Termos de Uso e Política de Privacidade acessíveis no app
-- [x] Design System unificado sem telas com cores legadas
-- [x] Uploads seguros com UUID para evitar conflitos de arquivos
+### Esquema de Tabelas Criadas:
+1. **`public.products`**: Anúncios de itens para troca (título, descrição, quer_em_troca, imagem_url, cidade, usuario_id, categoria, ativo, criado_em).
+2. **`public.mensagens`**: Mensagens de texto trocadas em tempo real via chat (remetente_id, destinatario_id, texto, lida, produto_id, criado_em).
+3. **`public.users`**: Perfis de usuários e cidades registradas.
+4. **`public.ratings`**: Avaliações de 1 a 5 estrelas e comentários entre parceiros de troca.
+5. **`public.reports`**: Sistema de denúncia de anúncios e usuários para moderação de conteúdo (Google Play UGC Compliance).
 
 ---
 
-## 💻 Comandos de Inicialização
+## 📱 3. Recursos de UI/UX e Estrutura Frontend
 
-### 1. Inicializar/Atualizar Banco de Dados
-```cmd
-python database_manager.py
-```
+### Arquitetura de Telas (Expo Router):
+- **`app/index.tsx`**: Landing Page de Apresentação (Hero com ilustração 3D, 3 pilares do escambo moderno, botão `COMEÇAR A TROCAR AGORA` e botão de mesmo tamanho em azul claro `INFORME A LOCALIZAÇÃO`).
+- **`app/(tabs)/feed.js`**: Feed dinâmico de trocas com busca em tempo real, chips de categorias e seletor de localização (`LocationModal`).
+- **`app/(tabs)/publish.js`**: Criação de novo anúncio com upload de fotos e validação de perfil.
+- **`app/(tabs)/explore.tsx`**: Painel de conversas e mensagens com ordenação e badge de não lidas.
+- **`app/(tabs)/profile.js`**: Gerenciamento de nome, cidade, avatar, termos de uso, política de privacidade e botão de exclusão permanente de dados.
+- **`app/product/[id].js`**: Detalhes completos do item para troca, reputação do anunciante, proposta de troca e denúncia.
+- **`app/chat.js`**: Negociação em tempo real com avaliação por estrelas ao concluir a troca.
 
-### 2. Rodar a API FastAPI
-```cmd
-python main.py
-```
-
-### 3. Rodar o App Mobile (Expo)
-```cmd
-npm start
-```
+### Componentes Chave:
+- **`components/BrandLogo.tsx`**: Logotipo oficial com a seta UP e elo circular com gradiente azul/ciano.
+- **`components/LocationModal.tsx`**: Modal com busca por País, Estado, Município ou Bairro e cidades em destaque.
+- **`components/TradeCard.js`**: Card responsivo (horizontal no desktop web e vertical no mobile).
 
 ---
-**Atualizado em**: Agosto de 2026 • Versão 1.0.0
+
+## 🛡️ 4. Políticas de Segurança e Google Play Store
+
+1. **Cadastro Progressivo (Navegação Livre):**
+   - Usuários podem navegar, pesquisar e ver detalhes de todos os produtos sem cadastro prévio.
+   - Ao tentar **Propor Troca** ou **Publicar**, o app exibe modal convidando a preencher Nome e Cidade.
+2. **Conformidade UGC (Conteúdo Gerado pelo Usuário):**
+   - Modais de denúncia em anúncios e chat (`/api/reports`).
+   - Bloqueio de usuários indesejados localmente.
+   - Rota de exclusão permanente de conta e dados (`DELETE /api/users/{user_id}`).
+3. **Assets Oficiais da Loja:**
+   - Ícone do App: `assets/images/playstore_icon_512.png` (512x512 px).
+   - Banner de Destaque: `assets/images/playstore_feature_graphic.png` (1024x500 px, sem marcas d'água).
+   - Pacote de Produção: [TrokaUp .aab](https://expo.dev/artifacts/eas/Vswhk8uL7hdzjhnUDlUo5chSUKs07tdgKaGosX80Nes.aab).
+
+---
+
+*Documento gerado e mantido por Antigravity (Gravi) em parceria com Edmilton.*
