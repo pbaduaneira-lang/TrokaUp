@@ -211,6 +211,33 @@ export default function WelcomeScreen() {
               <Text style={styles.trustText}>Reputação Real</Text>
             </View>
           </View>
+
+          {/* Links de Conformidade / Políticas (LGPD e Google Play) */}
+          <View style={styles.policyLinksContainer}>
+            <TouchableOpacity
+              style={styles.policyLinkButton}
+              onPress={() => router.push('/privacy' as any)}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="shield-checkmark-outline" size={15} color={Colors.light.primary} />
+              <Text style={styles.policyLinkText}>Política de Privacidade</Text>
+            </TouchableOpacity>
+
+            <Text style={styles.policyDot}>•</Text>
+
+            <TouchableOpacity
+              style={styles.policyLinkButton}
+              onPress={() => router.push('/privacy' as any)}
+              activeOpacity={0.7}
+            >
+              <Ionicons name="document-text-outline" size={15} color={Colors.light.textSecondary} />
+              <Text style={styles.policyLinkText}>Termos de Uso</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.copyrightText}>
+            © 2026 {Config.APP_NAME} • Todos os direitos reservados
+          </Text>
         </View>
       </ScrollView>
 
@@ -258,9 +285,15 @@ export default function WelcomeScreen() {
             </LinearGradient>
           </TouchableOpacity>
 
-          <Text style={styles.bottomDisclaimer}>
-            {Config.APP_NAME} • Sem taxas, sem comissões, direto entre pessoas.
-          </Text>
+          {/* Links Rápidos na Barra Inferior Mobile */}
+          <View style={styles.bottomBarPolicyRow}>
+            <TouchableOpacity onPress={() => router.push('/privacy' as any)}>
+              <Text style={styles.bottomDisclaimerLink}>Privacidade & Termos</Text>
+            </TouchableOpacity>
+            <Text style={styles.bottomDisclaimer}>
+              • {Config.APP_NAME} sem taxas, direto entre pessoas.
+            </Text>
+          </View>
         </View>
       )}
 
@@ -549,7 +582,50 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 10,
     color: Colors.light.muted,
-    marginTop: 6,
     fontWeight: '600',
+  },
+  policyLinksContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    gap: 8,
+  },
+  policyLinkButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+  },
+  policyLinkText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: Colors.light.primary,
+    textDecorationLine: 'underline',
+  },
+  policyDot: {
+    fontSize: 12,
+    color: Colors.light.muted,
+  },
+  copyrightText: {
+    textAlign: 'center',
+    fontSize: 11,
+    color: Colors.light.muted,
+    marginTop: 2,
+    marginBottom: 8,
+  },
+  bottomBarPolicyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 6,
+    gap: 4,
+  },
+  bottomDisclaimerLink: {
+    fontSize: 10,
+    color: Colors.light.primary,
+    fontWeight: '700',
+    textDecorationLine: 'underline',
   },
 });

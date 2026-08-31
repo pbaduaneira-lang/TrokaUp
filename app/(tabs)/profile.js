@@ -411,14 +411,27 @@ export default function ProfileScreen() {
             <Text style={styles.infoModalTitle}>Política de Privacidade</Text>
             <ScrollView style={styles.infoModalScroll}>
               <Text style={styles.infoModalText}>
-                1. O TrokaUp respeita sua privacidade e protege seus dados conforme a LGPD e as Diretrizes do Google Play.{'\n\n'}
-                2. Os dados de localização (cidade) e fotos de anúncios são compartilhados unicamente para a exibição de itens na sua região.{'\n\n'}
-                3. Você pode a qualquer momento excluir sua conta e todos os dados associados através do botão "Excluir Minha Conta e Dados" na tela de perfil.
+                1. O TrokaUp respeita sua privacidade e protege seus dados em conformidade rigorosa com a LGPD e as Políticas do Google Play.{'\n\n'}
+                2. Coleta de dados: Nome/apelido voluntário, localização (cidade) para filtros regionais, fotos de produtos cadastrados para troca e mensagens do chat interno.{'\n\n'}
+                3. Não vendemos e não compartilhamos seus dados pessoais com parceiros de marketing ou terceiros.{'\n\n'}
+                4. Câmera e Galeria de Fotos são solicitadas exclusivamente para inclusão de fotos em anúncios e avatar.{'\n\n'}
+                5. Exclusão: Você pode excluir sua conta e todos os dados associados a qualquer momento no botão "Excluir Minha Conta e Dados" nesta mesma tela.
               </Text>
             </ScrollView>
-            <TouchableOpacity style={styles.infoModalCloseBtn} onPress={() => setShowPrivacyModal(false)}>
-              <Text style={styles.infoModalCloseText}>Fechar</Text>
-            </TouchableOpacity>
+            <View style={{ gap: 8 }}>
+              <TouchableOpacity
+                style={[styles.infoModalCloseBtn, { backgroundColor: '#EEF2FF', borderWidth: 1, borderColor: Colors.light.primary }]}
+                onPress={() => {
+                  setShowPrivacyModal(false);
+                  router.push('/privacy');
+                }}
+              >
+                <Text style={[styles.infoModalCloseText, { color: Colors.light.primary }]}>Ver Política Completa</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.infoModalCloseBtn} onPress={() => setShowPrivacyModal(false)}>
+                <Text style={styles.infoModalCloseText}>Fechar</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </Modal>

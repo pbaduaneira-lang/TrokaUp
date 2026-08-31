@@ -8,6 +8,7 @@ from datetime import datetime
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, UploadFile, File, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from database_manager import get_db_cursor, init_db
@@ -36,6 +37,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/privacy", include_in_schema=False)
+@app.get("/privacidade", include_in_schema=False)
+async def get_privacy_policy():
+    privacy_file = os.path.join("static", "privacy.html")
+    if os.path.exists(privacy_file):
+        return FileResponse(privacy_file, media_type="text/html")
+    raise HTTPException(status_code=404, detail="Política de privacidade não encontrada.")
 
 # --- GERENCIADOR DE WEBSOCKETS ---
 class ConnectionManager:
