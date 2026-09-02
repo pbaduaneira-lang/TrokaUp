@@ -1,6 +1,6 @@
 # 🚀 TrokaUp - Documentação Técnica Oficial & Registro de Produção
 
-Documento central de engenharia, arquitetura, infraestrutura em nuvem e publicação do projeto **TrokaUp**.
+Documento central de engenharia, arquitetura, histórico de compilações, infraestrutura em nuvem e publicação do projeto **TrokaUp**.
 
 ---
 
@@ -11,24 +11,37 @@ Documento central de engenharia, arquitetura, infraestrutura em nuvem e publica�
 | **Nome da Plataforma** | **TrokaUp** |
 | **Slogan Oficial** | *Transforme o que você tem no que você quer. Escambo moderno & sustentável.* |
 | **Identificador do Pacote Android** | `com.trokaup.app` |
-| **Versão Atual / Próximo Build** | `1.0.0` (Target `versionCode 3 / 4`) |
+| **Versão Atual de Lançamento** | `1.0.0` (**versionCode 6**) |
 | **EAS Project ID (Expo)** | `c034a9d3-bdc5-4116-8a7e-1d07aed5bce0` |
 | **Conta Expo EAS** | `edmiltondefacio` (`pbaduaneira@gmail.com`) |
+| **Keystore Oficial de Produção** | `Build Credentials 69aDtGY9fe` (SHA1: `98:AF:E3:48:E9:73:F6:3B:0C:C8:BB:2B:5A:CF:94:3F:54:CF:B9:A3`) |
 | **Repositório Oficial no GitHub** | [https://github.com/pbaduaneira-lang/TrokaUp](https://github.com/pbaduaneira-lang/TrokaUp) |
-| **Ambiente Web / Vercel** | [https://trokaup.vercel.app](https://trokaup.vercel.app) *(DNS configurado)* |
-| **URL Oficial da Política de Privacidade** | `https://trokaup.vercel.app/privacy` *(ou `https://trokaup.com/privacidade`)* |
+| **Ambiente Web / Vercel** | [https://trokaup.vercel.app](https://trokaup.vercel.app) |
+| **URL Oficial da Política de Privacidade** | `https://trokaup.vercel.app/privacy` *(e rota nativa `/privacy`)* |
 
 ---
 
-## 🗄️ 2. Infraestrutura de Banco de Dados (Supabase PostgreSQL)
+## 📦 2. Registro do Pacote de Produção (.aab)
 
-O banco de dados foi migrado de ambiente local para a nuvem da AWS (São Paulo) no Supabase, com suporte a pooling de conexões (*Connection Pooling* na porta 6543) e SSL.
+| Propriedade | Detalhe |
+| :--- | :--- |
+| **Arquivo Local** | `c:\Trokaup\TrokaUp-v1.0.0-build6.aab` |
+| **Tamanho** | ~58.8 MB (58.800.107 bytes) |
+| **Build ID no Expo** | `636e2133-3b6e-4124-95f3-43be46e874ad` |
+| **Link Direto de Download** | [https://expo.dev/artifacts/eas/TBh1WQVMuxYRn1sIUkah4ucdsHkWnN0ZymsYYdydiQQ.aab](https://expo.dev/artifacts/eas/TBh1WQVMuxYRn1sIUkah4ucdsHkWnN0ZymsYYdydiQQ.aab) |
+| **Painel de Builds** | [https://expo.dev/accounts/edmiltondefacio/projects/trokaup/builds](https://expo.dev/accounts/edmiltondefacio/projects/trokaup/builds) |
+
+---
+
+## 🗄️ 3. Infraestrutura de Banco de Dados (Supabase PostgreSQL)
+
+O banco de dados opera na nuvem da AWS (São Paulo - `sa-east-1`) via Supabase, com suporte a *Connection Pooling* na porta 6543 e SSL.
 
 - **Projeto Supabase:** `xfwvkjxpomynvoyylxhx` (São Paulo - `sa-east-1`)
 - **String de Conexão Oficial:**
   `postgresql://postgres.xfwvkjxpomynvoyylxhx:trokaupedju1016@aws-0-sa-east-1.pooler.supabase.com:6543/postgres`
 
-### Esquema de Tabelas Criadas:
+### Esquema de Tabelas:
 1. **`public.products`**: Anúncios de itens para troca (título, descrição, quer_em_troca, imagem_url, cidade, usuario_id, categoria, ativo, criado_em).
 2. **`public.mensagens`**: Mensagens de texto trocadas em tempo real via chat (remetente_id, destinatario_id, texto, lida, produto_id, criado_em).
 3. **`public.users`**: Perfis de usuários e cidades registradas.
@@ -37,62 +50,40 @@ O banco de dados foi migrado de ambiente local para a nuvem da AWS (São Paulo) 
 
 ---
 
-## 📱 3. Recursos de UI/UX e Estrutura Frontend
+## 📱 4. Arquitetura de Telas & Frontend (Expo Router)
 
-### Arquitetura de Telas (Expo Router):
-- **`app/index.tsx`**: Landing Page de Apresentação (Hero 3D, 3 pilares, botões principais e **Links Oficiais de Política de Privacidade e Termos de Uso** visíveis no rodapé mobile e desktop).
-- **`app/privacy.tsx`**: **[NOVO]** Tela nativa dedicada de Política de Privacidade com conformidade total à LGPD e Google Play Data Safety.
-- **`app/(tabs)/feed.js`**: Feed dinâmico de trocas com busca em tempo real, chips de categorias e seletor de localização (`LocationModal`).
-- **`app/(tabs)/publish.js`**: Criação de novo anúncio com upload de fotos e validação de perfil.
+- **`app/index.tsx`**: Landing Page de Apresentação (Hero 3D, pilares da plataforma e links diretos da Política de Privacidade e Termos de Uso).
+- **`app/privacy.tsx`**: Tela nativa dedicada de Política de Privacidade em conformidade total com LGPD e Google Play Data Safety.
+- **`app/(tabs)/feed.js`**: Feed dinâmico com busca em tempo real, chips de categorias e seletor geográfico (`LocationModal`).
+- **`app/(tabs)/publish.js`**: Cadastro de itens para troca com upload de imagens.
 - **`app/(tabs)/explore.tsx`**: Painel de conversas e mensagens com ordenação e badge de não lidas.
-- **`app/(tabs)/profile.js`**: Gerenciamento de perfil, cidade, avatar, modal de termos e botão com rota para política de privacidade completa e exclusão permanente de conta e dados.
-- **`app/product/[id].js`**: Detalhes completos do item para troca, reputação do anunciante, proposta de troca e denúncia.
+- **`app/(tabs)/profile.js`**: Gerenciamento de perfil, links de termos/privacidade e botão de **Exclusão Permanente de Conta e Dados**.
+- **`app/product/[id].js`**: Detalhes completos do item, proposta de troca e modal de denúncia.
 - **`app/chat.js`**: Negociação em tempo real com avaliação por estrelas ao concluir a troca.
-
-### Componentes Chave:
-- **`components/BrandLogo.tsx`**: Logotipo oficial com a seta UP e elo circular com gradiente azul/ciano.
-- **`components/LocationModal.tsx`**: Modal com busca por País, Estado, Município ou Bairro e cidades em destaque.
-- **`components/TradeCard.js`**: Card responsivo (horizontal no desktop web e vertical no mobile).
 
 ---
 
-## 🛡️ 4. Políticas de Segurança, LGPD e Google Play Store
+## 🛡️ 5. Google Play Store & Conformidade
 
-1. **Correção da Rejeição do Google Play ("Política de Privacidade Inválida"):**
-   - **Causa da Rejeição:** URL não cadastrada ou inacessível no Google Play Console na seção *Conteúdo do app*.
-   - **Solução Implementada:**
-     * Criada página web pública completa em `static/privacy.html` servida via `https://trokaup.vercel.app/privacy` e FastAPI (`/privacy` e `/privacidade`).
-     * Inseridos botões clicáveis na Landing Page (`app/index.tsx`) e na aba de Perfil.
-     * Criada tela interna no aplicativo (`app/privacy.tsx`).
-
-2. **Cadastro Progressivo (Navegação Livre):**
-   - Usuários podem navegar, pesquisar e ver detalhes de todos os produtos sem cadastro prévio.
-   - Ao tentar **Propor Troca** ou **Publicar**, o app exibe modal convidando a preencher Nome e Cidade.
-
-3. **Conformidade UGC & Exclusão de Dados (Google Play Requirement):**
-   - Modais de denúncia em anúncios e chat (`/api/reports`).
-   - Rota e botão no app para exclusão permanente de conta e histórico de dados (`DELETE /api/users/{user_id}`).
-
-4. **Assets Oficiais da Loja:**
+1. **Política de Privacidade:**
+   - URL cadastrada na seção *Conteúdo do app*: `https://trokaup.vercel.app/privacy`.
+2. **UGC & Moderação de Conteúdo:**
+   - Modais de denúncia em anúncios e no chat vinculados à tabela `public.reports` e endpoint `/api/reports`.
+3. **Exclusão de Conta e Dados:**
+   - Rota `DELETE /api/users/{user_id}` para exclusão total e irrevogável de dados a pedido do usuário.
+4. **Assets Gráficos Oficiais:**
    - Ícone do App: `assets/images/playstore_icon_512.png` (512x512 px).
    - Banner de Destaque: `assets/images/playstore_feature_graphic.png` (1024x500 px).
 
 ---
 
-## 📋 5. Guia de Ação para a Virada do Mês (Próxima Sessão)
-
-1. **No Google Play Console (Imediato):**
-   - Ir em: **Política e programas ➡️ Conteúdo do app ➡️ Política de privacidade**.
-   - Inserir a URL: `https://trokaup.vercel.app/privacy` e Salvar.
-
-2. **Gerar novo pacote `.aab` (Assim que resetar o EAS em 01/09/2026):**
-   - Executar no terminal:
-     ```powershell
-     $env:EAS_BUILD_NO_EXPO_GO_WARNING="true"; npx eas-cli build --platform android --profile production --non-interactive
-     ```
-   - O EAS incrementará automaticamente o código para a versão `3` ou `4` e gerará o link direto de download do novo `.aab`.
-   - Fazer o upload do novo `.aab` na aba **Produção** do Google Play Console e submeter para revisão.
+## 🤝 6. Diretrizes de Atendimento & Padrão de Trabalho
+- **Fluxo de Release:**
+  1. Compilar pacote de produção assinado com a Keystore Oficial (`Build Credentials 69aDtGY9fe`).
+  2. Fornecer o link direto de download do `.aab` para o usuário e armazenar a cópia local.
+  3. Aguardar a confirmação de download pelo usuário.
+  4. Instruir passo a passo a publicação e revisão no Google Play Console.
 
 ---
 
-*Documento gerado e mantido por Antigravity (Gravi) em parceria com Edmilton.*
+*Documento mantido por Antigravity (Gravi) em parceria contínua com Edmilton.*

@@ -14,7 +14,7 @@
     },
     "android": {
       "package": "com.trokaup.app",
-      "versionCode": 2,
+      "versionCode": 5,
       "adaptiveIcon": {
         "backgroundColor": "#EEF2FF",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
